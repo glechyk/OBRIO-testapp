@@ -28,6 +28,6 @@ class CurrentPriceRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getCurrentPrice(): Flow<CurrentPriceDomain> =
-        currentPriceDao.getSingleEntity().map { it?.toDomain() ?: CurrentPriceDomain() }
+        currentPriceDao.getCurrentPriceEntity().map { it?.toDomain() ?: CurrentPriceDomain() }
 
 }

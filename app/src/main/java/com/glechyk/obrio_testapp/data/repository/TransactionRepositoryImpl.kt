@@ -19,7 +19,7 @@ class TransactionRepositoryImpl @Inject constructor(
 ) : TransactionRepository {
 
     override suspend fun insertTransaction(transactionDomain: TransactionDomain) {
-        transactionDao.insertTransaction(transactionDomain.toEntity())
+        transactionDao.insertTransactionEntity(transactionDomain.toEntity())
     }
 
     override suspend fun getTransactionsList(): Flow<PagingData<TransactionDomain>> {

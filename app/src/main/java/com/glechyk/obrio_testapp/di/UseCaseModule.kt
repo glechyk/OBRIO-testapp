@@ -1,15 +1,13 @@
 package com.glechyk.obrio_testapp.di
 
+import com.glechyk.obrio_testapp.domain.usecase.AddTransactionUseCase
+import com.glechyk.obrio_testapp.domain.usecase.AddTransactionUseCaseImpl
 import com.glechyk.obrio_testapp.domain.usecase.GetBalanceUseCase
 import com.glechyk.obrio_testapp.domain.usecase.GetBalanceUseCaseImpl
 import com.glechyk.obrio_testapp.domain.usecase.GetCurrentPriceUseCase
 import com.glechyk.obrio_testapp.domain.usecase.GetCurrentPriceUseCaseImpl
 import com.glechyk.obrio_testapp.domain.usecase.GetTransactionsListUseCase
 import com.glechyk.obrio_testapp.domain.usecase.GetTransactionsListUseCaseImpl
-import com.glechyk.obrio_testapp.domain.usecase.InsertTransactionUseCase
-import com.glechyk.obrio_testapp.domain.usecase.InsertTransactionUseCaseImpl
-import com.glechyk.obrio_testapp.domain.usecase.UpdateBalanceUseCase
-import com.glechyk.obrio_testapp.domain.usecase.UpdateBalanceUseCaseImpl
 import com.glechyk.obrio_testapp.domain.usecase.UpdateCurrentPriceUseCase
 import com.glechyk.obrio_testapp.domain.usecase.UpdateCurrentPriceUseCaseImpl
 import dagger.Binds
@@ -42,12 +40,6 @@ interface UseCaseModule {
 
     @Binds
     @Singleton
-    fun bindUpdateBalanceUseCase(
-        updateBalanceUseCaseImpl: UpdateBalanceUseCaseImpl
-    ): UpdateBalanceUseCase
-
-    @Binds
-    @Singleton
     fun bindGetTransactionsListUseCase(
         getTransactionsListUseCaseImpl: GetTransactionsListUseCaseImpl
     ): GetTransactionsListUseCase
@@ -55,6 +47,6 @@ interface UseCaseModule {
     @Binds
     @Singleton
     fun bindInsertTransactionUseCase(
-        insertTransactionUseCaseImpl: InsertTransactionUseCaseImpl
-    ): InsertTransactionUseCase
+        insertTransactionUseCaseImpl: AddTransactionUseCaseImpl
+    ): AddTransactionUseCase
 }

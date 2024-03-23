@@ -17,7 +17,7 @@ fun BalanceRoute(
     BalanceScreen(
         currentPrice = currentPriceState.value,
         balance = balanceState.value.toString(),
-        onUpdateBalanceClick = { viewModel.updateBalance(it) },
+        onIncreaseTransactionClick = viewModel::increaseTransaction,
         transactions = paging,
         onNavigateToTransaction = onNavigateToTransaction,
     )

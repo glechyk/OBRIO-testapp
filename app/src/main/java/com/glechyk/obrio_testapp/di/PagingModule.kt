@@ -17,7 +17,7 @@ class PagingModule {
     fun provideTransactionsPager(transactionDao: TransactionDao): Pager<Int, TransactionEntity> {
         return Pager(
             config = PagingConfig(pageSize = 20),
-            pagingSourceFactory = { transactionDao.getAllTransactions() },
+            pagingSourceFactory = { transactionDao.getTransactionEntities() },
         )
     }
 }

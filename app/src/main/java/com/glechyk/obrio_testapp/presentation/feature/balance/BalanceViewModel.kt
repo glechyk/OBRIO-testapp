@@ -3,13 +3,11 @@ package com.glechyk.obrio_testapp.presentation.feature.balance
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
-import com.glechyk.obrio_testapp.domain.model.BalanceDomain
 import com.glechyk.obrio_testapp.domain.model.TransactionDomain
+import com.glechyk.obrio_testapp.domain.usecase.AddTransactionUseCase
 import com.glechyk.obrio_testapp.domain.usecase.GetBalanceUseCase
 import com.glechyk.obrio_testapp.domain.usecase.GetCurrentPriceUseCase
 import com.glechyk.obrio_testapp.domain.usecase.GetTransactionsListUseCase
-import com.glechyk.obrio_testapp.domain.usecase.InsertTransactionUseCase
-import com.glechyk.obrio_testapp.domain.usecase.UpdateBalanceUseCase
 import com.glechyk.obrio_testapp.utils.subscribe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,8 +21,7 @@ import javax.inject.Inject
 class BalanceViewModel @Inject constructor(
     private val getCurrentPriceUseCase: GetCurrentPriceUseCase,
     private val getBalanceUseCase: GetBalanceUseCase,
-    private val updateBalanceUseCase: UpdateBalanceUseCase,
-    private val insertTransactionUseCase: InsertTransactionUseCase,
+    private val addTransactionUseCase: AddTransactionUseCase,
     private val getTransactionsListUseCase: GetTransactionsListUseCase,
 ) : ViewModel() {
 
@@ -40,51 +37,55 @@ class BalanceViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getCurrentPriceUseCase().subscribe(
-                scope = this,
-                success = { currentPrice ->
-                    _currentPriceState.update { Pair(currentPrice.amount, currentPrice.time) }
-                },
-                error = {
-                    it.printStackTrace()
-                },
-            )
-            getBalanceUseCase().subscribe(
-                scope = this,
-                success = { balance ->
-                    _balanceState.update { balance.amount }
-                },
-                error = {
-                    it.printStackTrace()
-                },
-            )
-            getTransactionsListUseCase().subscribe(
-                scope = this,
-                success = { transactions ->
-                    _transactionsList.update { transactions }
-                },
-                error = {
-                    it.printStackTrace()
-                },
-            )
+            subscribeGetCurrentPrice()
+            subscribeGetBalance()
+            subscribeGetTransactionsList()
         }
     }
 
-    fun updateBalance(amount: String) {
+    private suspend fun subscribeGetCurrentPrice() {
+        getCurrentPriceUseCase().subscribe(
+            scope = viewModelScope,
+            success = { currentPrice ->
+                _currentPriceState.update { Pair(currentPrice.amount, currentPrice.time) }
+            },
+            error = {
+                it.printStackTrace()
+            },
+        )
+    }
+
+    private suspend fun subscribeGetBalance() {
+        getBalanceUseCase().subscribe(
+            scope = viewModelScope,
+            success = { balance ->
+                _balanceState.update { balance.amount }
+            },
+            error = {
+                it.printStackTrace()
+            },
+        )
+    }
+
+    private suspend fun subscribeGetTransactionsList() {
+        getTransactionsListUseCase(viewModelScope).subscribe(
+            scope = viewModelScope,
+            success = { transactions ->
+                _transactionsList.update { transactions }
+            },
+            error = {
+                it.printStackTrace()
+            },
+        )
+    }
+
+    fun increaseTransaction(transactionAmount: String) {
         viewModelScope.launch {
-            val updatedBalance = _balanceState.value + amount.toDouble()
-            updateBalanceUseCase(
-                BalanceDomain(
-                    amount = updatedBalance
-                )
+            addTransactionUseCase(
+                balanceAmount = _balanceState.value,
+                transactionAmount = transactionAmount.toDouble(),
+                category = null
             )
-            insertTransactionUseCase(
-                TransactionDomain.Increase(
-                    amount = amount.toDouble(),
-                    time = System.currentTimeMillis()
-                )
-            )
-            _balanceState.update { updatedBalance }
         }
     }
 }

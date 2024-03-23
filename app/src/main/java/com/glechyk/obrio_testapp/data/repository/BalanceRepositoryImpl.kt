@@ -14,10 +14,10 @@ class BalanceRepositoryImpl @Inject constructor(
 ) : BalanceRepository {
 
     override suspend fun upsertBalance(balanceDomain: BalanceDomain) {
-        balanceDao.upsertBalance(balanceDomain.toEntity())
+        balanceDao.upsertBalanceEntity(balanceDomain.toEntity())
     }
 
     override suspend fun getBalance(): Flow<BalanceDomain> =
-        balanceDao.getSingleEntity().map { it?.toDomain() ?: BalanceDomain() }
+        balanceDao.getBalanceEntity().map { it?.toDomain() ?: BalanceDomain() }
 
 }

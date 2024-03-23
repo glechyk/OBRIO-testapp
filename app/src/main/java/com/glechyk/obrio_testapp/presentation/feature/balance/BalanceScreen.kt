@@ -62,7 +62,7 @@ fun BalanceScreen(
     currentPrice: Pair<String, String>,
     balance: String,
     transactions: LazyPagingItems<TransactionDomain>,
-    onUpdateBalanceClick: (String) -> Unit,
+    onIncreaseTransactionClick: (String) -> Unit,
     onNavigateToTransaction: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
@@ -169,7 +169,7 @@ fun BalanceScreen(
     IncreaseBalanceDialog(
         showDialog = showDialog,
         onDismiss = { showDialog = false },
-        onConfirm = { onUpdateBalanceClick(it) }
+        onConfirm = onIncreaseTransactionClick
     )
 }
 

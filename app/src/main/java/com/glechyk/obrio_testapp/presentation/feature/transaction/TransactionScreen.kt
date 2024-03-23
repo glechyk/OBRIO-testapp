@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,15 +29,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.glechyk.obrio_testapp.domain.model.Category
-import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransactionScreen(
     balance: Double,
-    onAddButtonClick: (CoroutineScope, String, Category) -> Unit,
+    onAddButtonClick: (String, Category) -> Unit,
 ) {
-    val scope = rememberCoroutineScope()
     var textValue by remember { mutableStateOf(TextFieldValue()) }
     val radioOptions = Category.entries.toTypedArray()
     var selectedOption by remember { mutableStateOf(Category.GROCERIES) }
@@ -99,7 +96,7 @@ fun TransactionScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
-                onClick = { onAddButtonClick(scope, textValue.text, selectedOption) },
+                onClick = { onAddButtonClick(textValue.text, selectedOption) },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = textValue.text.toDoubleOrNull()?.let { balance > it } ?: false
             ) {
